@@ -88,7 +88,7 @@ Button botonempezarThread;
                 if ((meufio == null) || (!meufio.isAlive())) {
 
                 } else {
-                    meufio.isAlive();
+                    Thread.interrupted();
                     Toast.makeText(getApplicationContext(), "FIO PARADO", Toast.LENGTH_LONG).show();
                 }
             }
