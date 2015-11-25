@@ -19,10 +19,10 @@ public class segundaactividad extends Activity {
     private Button botonempezarAsync;
 
 
-    private class miñatarefa extends AsyncTask<Void, Integer, Boolean> {
+    private class miñatarefa extends AsyncTask<Void, Integer, Boolean> implements lorena.ud_a3a_a15lorenaae.miñatarefa {
         @Override
         protected Boolean doInBackground(Void... params) {
-            for (int i = tempo_final; i >= 0; i--) {
+            for (int i = 0; i <= tempo_final; i++) {
                 try {
                     Thread.sleep(1000);
 

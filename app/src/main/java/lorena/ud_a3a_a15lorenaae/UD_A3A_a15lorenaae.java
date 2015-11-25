@@ -10,13 +10,26 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 
-
-public class UD_A3A_a15lorenaae extends Activity {
+public class UD_A3A_a15lorenaae extends Activity  {
 Button botonempezarThread;
     Button botonpararThread;
     private final int tempo_crono=20;
+    private final Object signal=new Object();
+    private volatile  boolean paused;
+    TextView texto;
+    static TextView texto2;
+public void setPaused(){
+    paused=true;
+}
+    public void setUnPaused(){
+        paused=false;
+        synchronized (signal) {
+            signal.notify();
+        }
+    }
     //INICIO DA CLASE HANDLER
     private static class ClassPonte extends Handler{
         private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
@@ -26,13 +39,15 @@ Button botonempezarThread;
 
                 public void handleMessage(Message msg){
                 UD_A3A_a15lorenaae target=mTarget.get();
-                TextView texto1=(TextView)target.findViewById(R.id.texto);
+                texto2=(TextView)target.findViewById(R.id.texto2);
                 if(msg.arg2==1) {
                     Toast.makeText(target.getApplicationContext(), "ACABOUSE O CRONO", Toast.LENGTH_LONG).show();
 
                 }
                 else{
-                   texto1.setText(String.valueOf(msg.arg1));
+
+                   texto2.setText(String.valueOf(msg.arg1));
+
 
             }
         }
@@ -46,13 +61,21 @@ Button botonempezarThread;
 
             for (int a = tempo_crono; a >= 0; a--) {
                 try {
-                    Thread.sleep(1000);
+                    while(paused){
+                        synchronized (signal){
+                            signal.wait();
+
+                            }
+
+                    }
+                    Thread.sleep(1500);
                     Message msg = new Message();
                     msg.arg1 = a;
                     ponte.sendMessage(msg);
 
 
-                } catch (InterruptedException e) {
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -68,30 +91,44 @@ Button botonempezarThread;
         botonempezarThread.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView texto=(TextView)findViewById(R.id.texto);
-                //texto.setText(""+numerosaleatorios());
+
+
 
                 if ((meufio == null) || (!meufio.isAlive())) {
                     Toast.makeText(getApplicationContext(), "INICIANDO FIO", Toast.LENGTH_LONG).show();
                     meufio = new MeuFio();
                     meufio.start();
                 } else {
-                    Toast.makeText(getApplicationContext(), "NON TE DEIXO TERMINAR O FIO ATA QUE REMATE :)", Toast.LENGTH_LONG).show();
+                    texto.setText(""+numerosaleatorios());
+
                 }
             }
         });
     }
+
     public void xestionareventosparar() {
         botonpararThread.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((meufio == null) || (!meufio.isAlive())) {
-
-                } else {
-                    Thread.interrupted();
-                    Toast.makeText(getApplicationContext(), "FIO PARADO", Toast.LENGTH_LONG).show();
-                }
+               if(paused){
+                   setUnPaused();
+               }
+                else{
+                    setPaused();
+                   if(texto.getText().toString().equals(texto2.getText().toString()))
+                       Toast.makeText(getApplicationContext(),"Coincide no valor "+texto2.getText().toString(),Toast.LENGTH_LONG).show();
+                   else{
+                       Toast.makeText(getApplicationContext(),"C")
+                   }
+                   try {
+                       meufio.sleep(1);
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+               }
             }
+
+
         });
 
     }
@@ -105,6 +142,7 @@ Button botonempezarThread;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ud__a3_a_a15lorenaae);
+        texto=(TextView)findViewById(R.id.texto);
         botonpararThread=(Button)findViewById(R.id.botonpararthread);
         botonempezarThread=(Button)findViewById(R.id.botonempezarthread);
         XestionarEventos();
