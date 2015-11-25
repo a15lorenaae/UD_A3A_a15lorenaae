@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/botonempezarAsyncTask"
         android:id="@+id/botonpararAsyncTask"
-        android:text="Parar AsyncTask"/>
+        android:text="Parar AsyncTask" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,7 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/texto2"
-        android:layout_below="@id/texto"/>
+        android:layout_below="@id/texto"
+        android:visibility="visible"/>
     <ProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,4 +47,9 @@
         android:layout_below="@id/texto2"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progressbar"
+        android:id="@+id/texto3" />
 </RelativeLayout>
