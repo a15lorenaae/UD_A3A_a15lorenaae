@@ -23,6 +23,7 @@ Button botonempezarThread;
     private final Object signal=new Object();
     private volatile  boolean paused;
     TextView texto3;
+    static TextView texto4;
     private static final int tempo_final = 20;
     private miñatarefa cronometro;
     TextView texto;
@@ -42,32 +43,52 @@ public void setPaused(){
         }
     }
 
-
-
     //INICIO DA CLASE HANDLER
     private static class ClassPonte extends Handler{
-        private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
-        ClassPonte(UD_A3A_a15lorenaae target) {
-            mTarget = new WeakReference<UD_A3A_a15lorenaae>(target);
-        }
+            private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
+            ClassPonte(UD_A3A_a15lorenaae target) {
+                mTarget = new WeakReference<UD_A3A_a15lorenaae>(target);
+            }
             public void handleMessage(Message msg){
                 UD_A3A_a15lorenaae target=mTarget.get();
                 texto2=(TextView)target.findViewById(R.id.texto2);
                 if(msg.arg2==1) {
-                    Toast.makeText(target.getApplicationContext(), "ACABOUSE O CRONO", Toast.LENGTH_LONG).show();
                     texto2.setText(String.valueOf(msg.arg1));
                 }
                 else{
                     texto2.setText(String.valueOf(msg.arg1));
 
 
+
+
+                }
             }
-        }
 
 
 
     };
+    private static class ClassPonte1 extends Handler{
+        private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
+        ClassPonte1(UD_A3A_a15lorenaae target) {
+            mTarget = new WeakReference<UD_A3A_a15lorenaae>(target);
+        }
+        public void handleMessage(Message msg){
+            UD_A3A_a15lorenaae target=mTarget.get();
+
+            texto4=(TextView)target.findViewById(R.id.texto4);
+            if(msg.arg2==1) {
+                        }
+            else {
+
+                texto4.setText(String.valueOf(msg.arg1));
+
+            }
+
+            }
+        }
+
     private ClassPonte ponte=new ClassPonte(this);
+    private ClassPonte1 ponte1=new ClassPonte1(this);
     private class MeuFio extends Thread  {
         public void run() {
 
@@ -119,7 +140,6 @@ public void setPaused(){
                 }
                 if(paused){
                     setUnPaused();
-                    Toast.makeText(getApplicationContext(), "RENAUDANDO FIO", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -166,13 +186,19 @@ public void setPaused(){
             for (int i = tempo_final; i >=0; i--) {
                 try {
                     Thread.sleep(1000);
+                    Message msg = new Message();
+                    msg.arg1 = i;
+                    ponte1.sendMessage(msg);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                publishProgress(i);
+
                 if (isCancelled())
                     break;
+                Message msgFin = new Message();
+                msgFin.arg2 = 1;
+                ponte.sendMessage(msgFin);
             }
             return true;
         }
@@ -205,7 +231,7 @@ public void setPaused(){
                     cronometro = new miñatarefa();
                     cronometro.execute();
                     Toast.makeText(getApplicationContext(),"Tarefa Iniciada",Toast.LENGTH_LONG).show();
-                    texto3.setText("" + numerosaleatorios());
+                   texto3.setText("" + numerosaleatorios());
 
 
                 } else {
@@ -221,13 +247,15 @@ public void setPaused(){
                 if (cronometro.getStatus() == AsyncTask.Status.RUNNING) {
                     cronometro.cancel(true);
                 }
+                if(texto3.getText().toString().equals(texto4.getText().toString()))
+                    Toast.makeText(getApplicationContext(),"Coincide no valor "+texto4.getText().toString(),Toast.LENGTH_LONG).show();
+                else{
+                    Toast.makeText(getApplicationContext(), "Non coinciden, porque o valor é:" + texto4.getText().toString(), Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
