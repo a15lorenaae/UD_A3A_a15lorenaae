@@ -112,20 +112,15 @@ public void setPaused(){
                     Toast.makeText(getApplicationContext(), "INICIANDO FIO", Toast.LENGTH_LONG).show();
                     meufio = new MeuFio();
                     meufio.start();
-
-                    if(paused){
-                        setUnPaused();
-                        Toast.makeText(getApplicationContext(), "RENAUDANDO FIO", Toast.LENGTH_LONG).show();
-                    }
-
-
-
                     texto.setText("" + numerosaleatorios());
                 } else {
                     texto.setText("" + numerosaleatorios());
 
                 }
-
+                if(paused){
+                    setUnPaused();
+                    Toast.makeText(getApplicationContext(), "RENAUDANDO FIO", Toast.LENGTH_LONG).show();
+                }
 
 
             }
