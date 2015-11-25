@@ -18,6 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class UD_A3A_a15lorenaae extends Activity {
 Button botonempezarThread;
+    private static boolean stopthreadervariable=false;
     Button botonpararThread;
     private final int tempo_crono=20;
     private final Object signal=new Object();
@@ -28,10 +29,8 @@ Button botonempezarThread;
     private miñatarefa cronometro;
     TextView texto;
     private Button botonempezarAsync;
-
-
     static TextView texto2;
-    private boolean timetoQuit=false;
+
 public void setPaused(){
     paused=true;
 }
@@ -158,6 +157,7 @@ public void setPaused(){
 
                   try {
                        meufio.sleep(1);
+
                    } catch (InterruptedException e) {
                        e.printStackTrace();
                    }
