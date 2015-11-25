@@ -63,9 +63,6 @@ public void setPaused(){
 
                 }
             }
-
-
-
     };
     private static class ClassPonte1 extends Handler{
         private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
@@ -79,7 +76,6 @@ public void setPaused(){
             if(msg.arg2==1) {
                         }
             else {
-
                 texto4.setText(String.valueOf(msg.arg1));
 
             }
@@ -177,9 +173,6 @@ public void setPaused(){
         return numeroaleatorio;
 
     }
-
-
-
     private class miñatarefa extends AsyncTask<Void, Integer, Boolean> implements lorena.ud_a3a_a15lorenaae.miñatarefa {
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -198,7 +191,7 @@ public void setPaused(){
                     break;
                 Message msgFin = new Message();
                 msgFin.arg2 = 1;
-                ponte.sendMessage(msgFin);
+                ponte1.sendMessage(msgFin);
             }
             return true;
         }
