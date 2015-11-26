@@ -8,12 +8,9 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.lang.ref.WeakReference;
-import java.util.Objects;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class UD_A3A_a15lorenaae extends Activity {
@@ -63,27 +60,9 @@ public void setPaused(){
                 }
             }
     };
-    private static class ClassPonte1 extends Handler{
-        private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
-        ClassPonte1(UD_A3A_a15lorenaae target) {
-            mTarget = new WeakReference<UD_A3A_a15lorenaae>(target);
-        }
-        public void handleMessage(Message msg){
-            UD_A3A_a15lorenaae target=mTarget.get();
-
-            texto4=(TextView)target.findViewById(R.id.texto4);
-            if(msg.arg2==1) {
-                        }
-            else {
-                texto4.setText(String.valueOf(msg.arg1));
-
-            }
-
-            }
-        }
 
     private ClassPonte ponte=new ClassPonte(this);
-    private ClassPonte1 ponte1=new ClassPonte1(this);
+
     private class MeuFio extends Thread  {
         public void run() {
 
@@ -173,15 +152,15 @@ public void setPaused(){
         return numeroaleatorio;
 
     }
-    private class miñatarefa extends AsyncTask<Void, Integer, Boolean> implements lorena.ud_a3a_a15lorenaae.miñatarefa {
+    private class miñatarefa extends AsyncTask<Void, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
             for (int i = tempo_final; i >=0; i--) {
                 try {
                     Thread.sleep(1000);
-                    Message msg = new Message();
+                   /* Message msg = new Message();
                     msg.arg1 = i;
-                    ponte1.sendMessage(msg);
+                    ponte.sendMessage(msg);*/
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -191,7 +170,7 @@ public void setPaused(){
                     break;
                 Message msgFin = new Message();
                 msgFin.arg2 = 1;
-                ponte1.sendMessage(msgFin);
+                ponte.sendMessage(msgFin);
             }
             return true;
         }
@@ -224,11 +203,11 @@ public void setPaused(){
                     cronometro = new miñatarefa();
                     cronometro.execute();
                     Toast.makeText(getApplicationContext(),"Tarefa Iniciada",Toast.LENGTH_LONG).show();
-                   texto3.setText("" + numerosaleatorios());
+                   texto.setText("" + numerosaleatorios());
 
 
                 } else {
-                     texto3.setText(""+numerosaleatorios());
+                     texto.setText(""+numerosaleatorios());
                 }
 
             }
@@ -237,13 +216,16 @@ public void setPaused(){
         botoncancelar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(texto2.getText().toString().equals("") && texto2.getText().toString()==null){
+                    Toast.makeText(getApplication(),"Pulsa en Start antes de parar",Toast.LENGTH_LONG).show();
+                }
                 if (cronometro.getStatus() == AsyncTask.Status.RUNNING) {
                     cronometro.cancel(true);
                 }
-                if(texto3.getText().toString().equals(texto4.getText().toString()))
-                    Toast.makeText(getApplicationContext(),"Coincide no valor "+texto4.getText().toString(),Toast.LENGTH_LONG).show();
+                if(texto.getText().toString().equals(texto2.getText().toString()))
+                    Toast.makeText(getApplicationContext(),"Coincide no valor "+texto2.getText().toString(),Toast.LENGTH_LONG).show();
                 else{
-                    Toast.makeText(getApplicationContext(), "Non coinciden, porque o valor é:" + texto4.getText().toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Non coinciden, porque o valor é:" + texto2.getText().toString(), Toast.LENGTH_LONG).show();
                 }
 
             }
