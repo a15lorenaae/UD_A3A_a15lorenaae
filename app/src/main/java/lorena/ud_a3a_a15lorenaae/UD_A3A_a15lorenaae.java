@@ -15,18 +15,20 @@ import java.lang.ref.WeakReference;
 
 public class UD_A3A_a15lorenaae extends Activity {
 Button botonempezarThread;
-    private static boolean stopthreadervariable=false;
+
     Button botonpararThread;
     private final int tempo_crono=20;
     private final Object signal=new Object();
     private volatile  boolean paused;
-    TextView texto3;
-    static TextView texto4;
     private static final int tempo_final = 20;
     private miñatarefa cronometro;
     TextView texto;
     private Button botonempezarAsync;
-    static TextView texto2;
+    TextView texto2;
+    Message msg;
+    Message msgFin;
+
+
 
 public void setPaused(){
     paused=true;
@@ -40,22 +42,21 @@ public void setPaused(){
     }
 
     //INICIO DA CLASE HANDLER
-    private static class ClassPonte extends Handler{
+    private class ClassPonte extends Handler{
             private WeakReference<UD_A3A_a15lorenaae>mTarget=null;
             ClassPonte(UD_A3A_a15lorenaae target) {
                 mTarget = new WeakReference<UD_A3A_a15lorenaae>(target);
             }
             public void handleMessage(Message msg){
                 UD_A3A_a15lorenaae target=mTarget.get();
-                texto2=(TextView)target.findViewById(R.id.texto2);
-                if(msg.arg2==1) {
-                    texto2.setText(String.valueOf(msg.arg1));
+                texto2=(TextView)target.findViewById(R.id.textosegundo);
+
+                if((msg.arg2==1)) {
+                    //texto2.setText(String.valueOf(msg.arg1));
+
                 }
                 else{
                     texto2.setText(String.valueOf(msg.arg1));
-
-
-
 
                 }
             }
@@ -78,8 +79,8 @@ public void setPaused(){
 
                     }
                     Thread.sleep(1000);
-                    Message msg = new Message();
-                    msg.arg1 = a;
+                    msg=new Message();
+                    msg.arg1= a;
                     ponte.sendMessage(msg);
 
 
@@ -89,7 +90,7 @@ public void setPaused(){
             }
 
 
-            Message msgFin = new Message();
+           msgFin=new Message();
             msgFin.arg2 = 1;
             ponte.sendMessage(msgFin);
         }
@@ -155,12 +156,12 @@ public void setPaused(){
     private class miñatarefa extends AsyncTask<Void, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
-            for (int i = tempo_final; i >=0; i--) {
+            for (int a = tempo_final; a >=0; a--) {
                 try {
                     Thread.sleep(1000);
-                   /* Message msg = new Message();
-                    msg.arg1 = i;
-                    ponte.sendMessage(msg);*/
+                    msg = new Message();
+                    msg.arg1 = a;
+                    ponte.sendMessage(msg);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -168,7 +169,7 @@ public void setPaused(){
 
                 if (isCancelled())
                     break;
-                Message msgFin = new Message();
+                msgFin = new Message();
                 msgFin.arg2 = 1;
                 ponte.sendMessage(msgFin);
             }
@@ -216,18 +217,21 @@ public void setPaused(){
         botoncancelar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(texto2.getText().toString().equals("") && texto2.getText().toString()==null){
-                    Toast.makeText(getApplication(),"Pulsa en Start antes de parar",Toast.LENGTH_LONG).show();
-                }
-                if (cronometro.getStatus() == AsyncTask.Status.RUNNING) {
-                    cronometro.cancel(true);
-                }
-                if(texto.getText().toString().equals(texto2.getText().toString()))
-                    Toast.makeText(getApplicationContext(),"Coincide no valor "+texto2.getText().toString(),Toast.LENGTH_LONG).show();
-                else{
-                    Toast.makeText(getApplicationContext(), "Non coinciden, porque o valor é:" + texto2.getText().toString(), Toast.LENGTH_LONG).show();
+                if ((cronometro == null) || (cronometro.getStatus() == AsyncTask.Status.FINISHED)) {
+                    Toast.makeText(getApplicationContext(), "Pulse boton Start", Toast.LENGTH_LONG).show();
+
                 }
 
+                else {
+                    cronometro.cancel(true);
+
+
+                    if (texto.getText().toString().equals(texto2.getText().toString()))
+                        Toast.makeText(getApplicationContext(), "Coincide no valor " + texto2.getText().toString(), Toast.LENGTH_LONG).show();
+                    else {
+                        Toast.makeText(getApplicationContext(), "Non coinciden, porque o valor é:" + texto2.getText().toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         });
     }
@@ -235,14 +239,13 @@ public void setPaused(){
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ud__a3_a_a15lorenaae);
-        texto=(TextView)findViewById(R.id.texto);
+        texto=(TextView)findViewById(R.id.textoprimero);
         botonpararThread=(Button)findViewById(R.id.botonpararthread);
         botonempezarThread=(Button)findViewById(R.id.botonempezarthread);
-        texto3=(TextView)findViewById(R.id.texto3);
         XestionarEventos();
         xestionareventosparar();
         XestionarEventosAsync();
-        texto=(TextView)findViewById(R.id.texto);
+
 
 
 
